@@ -28,7 +28,35 @@ public class EncapsulateTheData {
 	String nomenclature = " "; //must not be set to a blank string. Blank Strings get set to a space
 	Object memberObj; //can be any object type except String. Strings get turned into objects.
 	
-	public static void main(String[] args) {
-		
+	
+	public int getItemsReceived()
+	{
+		return itemsReceived;
 	}
+	public void setItemsReceived(int x)
+	{
+		if(x < 0) {itemsReceived = 0;}
+		else {itemsReceived = x;}
+	}
+	
+	public float getDegreesTurned() {return degreesTurned;}
+	public void setDegreesTurned(float x) 
+	{
+		degreesTurned = x%360;
+	}
+	
+	public String getNomenclature() {return nomenclature;}
+	public void setNomenclature(String s)
+	{
+		if(s.length() == 0) {nomenclature = " ";}
+		else {nomenclature = s;}
+	}
+	
+	public Object getMemberObj() {return memberObj;}
+	public void setMemberObj(Object o)
+	{
+		if(o.getClass().getName().equalsIgnoreCase("java.lang.String")) {memberObj = new Object();}
+		else {memberObj = o;}
+	}
+	
 }
