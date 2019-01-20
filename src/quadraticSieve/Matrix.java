@@ -36,36 +36,50 @@ public class Matrix
 	{
 		int i = 0;
 		int j = 0;
+		boolean check = false;
+		
+		System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+		System.out.println("");
 		
 		while(i < m.length && j < m[i].length)
 		{
-			if (m[i][j] == 0)
+			while (m[i][j] == 0)
 			{
-				for(int k = i + 1; k < m.length; k++)
+				for(int k = i+1; k < m.length; k++)
 				{
 					if(m[k][j] == 1) 
 					{
-						switchRows(i, k);
+						switchRows(i, k); 
+						check = true;
+						
+						System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+						System.out.println("");
 						
 						break;
 					}
 				}
+				if(check != true) {j++;}
+				if(check) {check = false;}
+				
 			}
 			
 			for(int k = 0; k < m.length; k++)
 			{
-				if(m[k][j] == 1)
+				if(k != i && m[k][j] == 1)
 				{
-					for(int l = 0; l < m.length; l++)
+					for(int l = 0; l < m[0].length; l++)
 					{
 						m[k][l] = m[k][l] ^ m[i][l];
 					}
+					System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+					System.out.println("");
 				}
 			}
 			
 			i++;
 			j++;
 		}
+			
 	}
 	
 	

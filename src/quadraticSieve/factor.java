@@ -80,8 +80,7 @@ public class factor
 		Matrix t = new Matrix(findNull);
 		t.transpose();
 		
-		System.out.println(Arrays.deepToString(t.getArray()).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-		System.out.println("");
+		//System.out.println(possible);
 		
 		t.rref();
 		
