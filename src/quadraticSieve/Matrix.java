@@ -38,9 +38,6 @@ public class Matrix
 		int j = 0;
 		boolean check = false;
 		
-		System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-		System.out.println("");
-		
 		while(i < m.length && j < m[i].length)
 		{
 			while (m[i][j] == 0)
@@ -52,14 +49,11 @@ public class Matrix
 						switchRows(i, k); 
 						check = true;
 						
-						System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-						System.out.println("");
-						
 						break;
 					}
 				}
 				if(check != true) {j++;}
-				if(check) {check = false;}
+				if(check) {check = false; break;}
 				
 			}
 			
@@ -71,8 +65,6 @@ public class Matrix
 					{
 						m[k][l] = m[k][l] ^ m[i][l];
 					}
-					System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-					System.out.println("");
 				}
 			}
 			

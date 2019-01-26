@@ -2,20 +2,21 @@ package quadraticSieve;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class factor 
 {
 
-	public int[][] factor(int n, int b)
+	public ArrayList<Integer> quadSieve(int n, int b)
 	{
-		ArrayList<Integer> primes = new SieveOfAtkin().sieve(n+1);
+		ArrayList<Integer> primes = new SieveOfAtkin().sieve(b+1);
 		ArrayList<Integer> factorBase = new ArrayList<Integer>();
-		
+		ArrayList<Integer> factors = new ArrayList<Integer>();
 		factorBase.add(-1);
 		
 		for(int i = 0; i < primes.size(); i++)
 		{
-			if(new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1 && primes.get(i) < b) {factorBase.add(primes.get(i));}	
+			if(new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1) {factorBase.add(primes.get(i));}	
 		}
 		
 		int[][] A = new int[factorBase.size()][factorBase.size() - 1];
@@ -77,22 +78,62 @@ public class factor
 			}
 		}
 		
+		
 		Matrix t = new Matrix(findNull);
 		t.transpose();
 		
-		//System.out.println(possible);
-		
 		t.rref();
 		
-		return t.getArray();
+		t.transpose();
 		
+		findNull = t.getArray();
+		int[] values = null;
 		
+		for(int i = 0; i < findNull[0].length; i++)
+		{
+			int[] column = getColumn(findNull, i);
+			int[] subColumn = Arrays.copyOfRange(column, 0, findNull.length - possible.size());
+
+			int numZeroes = 0;
+			for(int j = 0; j < subColumn.length; j++)
+			{
+				if(subColumn[j] == 0) {numZeroes++;}
+			}
+			
+			if(numZeroes == subColumn.length)
+			{
+				values = Arrays.copyOfRange(column, findNull.length - possible.size(), findNull.length);
+				
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				for(int k = 0; k < values.length; k++)
+				{
+					if(values[k] == 1) {temp.add(possible.get(k));}
+				}
+				
+				
+				factors = new ArrayList<Integer>();
+				
+				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) + gcd.findB(temp, n), n)));
+				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) - gcd.findB(temp, n), n)));
+				factors.add(null);
+				
+			}
+			
+			
+		}
 		
+		return factors;
+		
+	}
+	
+	int[] getColumn(int[][] matrix, int column) {
+	    return IntStream.range(0, matrix.length)
+	        .map(i -> matrix[i][column]).toArray();
 	}
 	
 	
 	public static void main(String[] args) {
-		System.out.println(Arrays.deepToString(new factor().factor(87463, 30)).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+		System.out.println(new factor().quadSieve(8713, 30));
 	}
 	
 }
