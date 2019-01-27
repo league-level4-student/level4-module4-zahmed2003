@@ -1,36 +1,33 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 class GFG{ 
 
 
-public int[] mod2(int n, ArrayList<Integer> base)  
+public BigInteger[] mod2(BigInteger n, ArrayList<BigInteger> base)  
 { 
-	int[] factors = new int[base.size()];
+	BigInteger[] factors = new BigInteger[base.size()];
 	
-	for(int i = 0; i < factors.length; i++) {factors[i] = 0;}
+	for(int i = 0; i < factors.length; i++) {factors[i] = BigInteger.ZERO;}
 	
 	for(int i = 0; i < base.size(); i++)
 	{
-		if(base.get(i) == -1 && n < 0) {factors[i] = 1; n = -n;}
-		else if(i != 0 && n > 0)
+		while(n.mod(base.get(i)) == BigInteger.ZERO) 
 		{
-			while(n%base.get(i) == 0) 
-			{
-				factors[i] += 1;
-				n = n/base.get(i);
-				
-			}
+			factors[i].add(BigInteger.ONE);
+			n = n.divide(base.get(i));
+			
 		}
 	}
 	
-	if(n != 1) {return null;}
+	if(n.compareTo(BigInteger.ONE) != 0) {return null;}
 	else 
 	{
 		for(int i = 0; i < factors.length; i++)
 		{
-			factors[i] = factors[i]%2;
+			factors[i] = factors[i].mod(BigInteger.valueOf(2));
 		}
 		
 		return factors;

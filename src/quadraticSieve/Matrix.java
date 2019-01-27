@@ -1,20 +1,21 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Matrix 
 {
-	int[][] m;
+	BigInteger[][] m;
 	
-	public Matrix(int[][] m)
+	public Matrix(BigInteger[][] m)
 	{
 		this.m = m;
 	}
 	
 	public void transpose()
 	{
-		int[][] t = new int[m[0].length][m.length];
+		BigInteger[][] t = new BigInteger[m[0].length][m.length];
 		for(int i = 0; i < m.length; i++)
 		{
 			for(int j = 0; j < m[i].length; j++)
@@ -27,7 +28,7 @@ public class Matrix
 	}
 	
 	public void switchRows(int rowA, int rowB) {
-		   int tmpRow[] = m[rowA];
+			BigInteger tmpRow[] = m[rowA];
 		   m[rowA] = m[rowB];
 		   m[rowB] = tmpRow;
 		}
@@ -40,11 +41,11 @@ public class Matrix
 		
 		while(i < m.length && j < m[i].length)
 		{
-			while (m[i][j] == 0)
+			while (m[i][j].compareTo(BigInteger.ZERO) == 0)
 			{
 				for(int k = i+1; k < m.length; k++)
 				{
-					if(m[k][j] == 1) 
+					if(m[k][j].compareTo(BigInteger.ONE) == 0) 
 					{
 						switchRows(i, k); 
 						check = true;
@@ -59,11 +60,11 @@ public class Matrix
 			
 			for(int k = 0; k < m.length; k++)
 			{
-				if(k != i && m[k][j] == 1)
+				if(k != i && m[k][j].compareTo(BigInteger.ONE) == 0)
 				{
 					for(int l = 0; l < m[0].length; l++)
 					{
-						m[k][l] = m[k][l] ^ m[i][l];
+						m[k][l] = m[k][l].add(m[i][l]).mod(BigInteger.valueOf(2));
 					}
 				}
 			}
@@ -76,23 +77,23 @@ public class Matrix
 	
 	
 	
-	public static int[][] identity(int n)
+	public static BigInteger[][] identity(int n)
 	{
-		int[][] id = new int[n][n];
+		BigInteger[][] id = new BigInteger[n][n];
 		
 		for(int i = 0; i < id.length; i++)
 		{
 			for(int j = 0; j < id[i].length; j++)
 			{
-				if(i == j) {id[i][j] = 1;}
-				else {id[i][j] = 0;}
+				if(i == j) {id[i][j] = BigInteger.ONE;}
+				else {id[i][j] = BigInteger.ZERO;}
 			}
 		}
 		
 		return id;
 	}
 	
-	public int[][] getArray()
+	public BigInteger[][] getArray()
 	{
 		return m;
 	}

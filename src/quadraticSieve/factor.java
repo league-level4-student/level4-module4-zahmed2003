@@ -1,66 +1,63 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 public class factor 
 {
 
-	public ArrayList<Integer> quadSieve(int n, int b)
+	public ArrayList<BigInteger> quadSieve(BigInteger n, BigInteger b)
 	{
-		ArrayList<Integer> primes = new SieveOfAtkin().sieve(b+1);
-		ArrayList<Integer> factorBase = new ArrayList<Integer>();
-		ArrayList<Integer> factors = new ArrayList<Integer>();
-		factorBase.add(-1);
 		
-		for(int i = 0; i < primes.size(); i++)
+		
+		
+		ArrayList<BigInteger> primes = new Sieve().sieve(b.add(BigInteger.ONE));
+		ArrayList<BigInteger> factorBase = new ArrayList<BigInteger>();
+		ArrayList<BigInteger> factors = new ArrayList<BigInteger>();
+		
+		
+		
+		while(n.mod(BigInteger.valueOf(2)).compareTo(BigInteger.ZERO) == 0) {n = n.divide(BigInteger.valueOf(2));}
+		
+		
+		for(int i = 1; i < primes.size(); i++)
 		{
 			if(new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1) {factorBase.add(primes.get(i));}	
 		}
 		
-		int[][] A = new int[factorBase.size()][factorBase.size() - 1];
-		ArrayList<Integer> possible = new ArrayList<Integer>();
-		
-		int start = (int) Math.floor(Math.sqrt(n));
-		int check = 0;
-		int count = 1;
 		
 		
-		while(check < factorBase.size() - 1)
+		BigInteger[][] A = new BigInteger[factorBase.size()][factorBase.size() - 1];
+		ArrayList<BigInteger> possible = new ArrayList<BigInteger>();
+		
+		BigInteger start = BigInteger.ONE;
+		BigInteger check = BigInteger.ZERO;
+		BigInteger count = BigInteger.ONE;
+		
+		
+		while(check.compareTo(BigInteger.valueOf(factorBase.size() - 1)) < 0)
 		{
-			int above = start + count;
-			int below = start - count;
+			BigInteger above = start.add(count);
 			
-			int[] aboveF = new GFG().mod2(above*above - n, factorBase);
-			int[] belowF = new GFG().mod2(below*below - n, factorBase);
+			BigInteger[] aboveF = new GFG().mod2(above.multiply(above).subtract(n), factorBase);
 			
 			if(aboveF != null)
 			{
 				for(int i = 0; i < aboveF.length; i++)
 				{
-					A[i][check] = aboveF[i];
+					A[i][check.intValueExact()] = aboveF[i];
 				}
 				possible.add(above);
-				check++;
+				check.add(BigInteger.ONE);
 			}
 			
-			if(belowF != null)
-			{
-				for(int i = 0; i < belowF.length; i++)
-				{
-					A[i][check] = belowF[i];
-				}
-				possible.add(below);
-				check++;
-			}
-			
-			count++;
+			count.add(BigInteger.ONE);
 			
 		}
 		
-		int[][] findNull = new int[A.length + A[0].length][A[0].length];
-		int[][] id = Matrix.identity(A[0].length);
+		BigInteger[][] findNull = new BigInteger[A.length + A[0].length][A[0].length];
+		BigInteger[][] id = Matrix.identity(A[0].length);
 		
 		for(int i = 0; i < A.length; i++)
 		{
@@ -79,6 +76,7 @@ public class factor
 		}
 		
 		
+		
 		Matrix t = new Matrix(findNull);
 		t.transpose();
 		
@@ -87,35 +85,37 @@ public class factor
 		t.transpose();
 		
 		findNull = t.getArray();
-		int[] values = null;
+		BigInteger[] values = null;
 		
 		for(int i = 0; i < findNull[0].length; i++)
 		{
-			int[] column = getColumn(findNull, i);
-			int[] subColumn = Arrays.copyOfRange(column, 0, findNull.length - possible.size());
+			BigInteger[] column = getColumn(findNull, i);
+			BigInteger[] subColumn = Arrays.copyOfRange(column, 0, findNull.length - possible.size());
 
 			int numZeroes = 0;
+			
 			for(int j = 0; j < subColumn.length; j++)
 			{
-				if(subColumn[j] == 0) {numZeroes++;}
+				if(subColumn[j].compareTo(BigInteger.ZERO) == 0) {numZeroes++;}
 			}
 			
 			if(numZeroes == subColumn.length)
 			{
+				
+				
 				values = Arrays.copyOfRange(column, findNull.length - possible.size(), findNull.length);
 				
-				ArrayList<Integer> temp = new ArrayList<Integer>();
+				ArrayList<BigInteger> temp = new ArrayList<BigInteger>();
 				for(int k = 0; k < values.length; k++)
 				{
-					if(values[k] == 1) {temp.add(possible.get(k));}
+					if(values[k].compareTo(BigInteger.ONE) == 0) {temp.add(possible.get(k));}
 				}
 				
-				
-				factors = new ArrayList<Integer>();
-				
-				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) + gcd.findB(temp, n), n)));
-				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) - gcd.findB(temp, n), n)));
+				factors.add(gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)).abs(), n));
+				factors.add(gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)).abs(), n));
 				factors.add(null);
+				
+				System.out.println(factors);
 				
 			}
 			
@@ -126,14 +126,16 @@ public class factor
 		
 	}
 	
-	int[] getColumn(int[][] matrix, int column) {
-	    return IntStream.range(0, matrix.length)
-	        .map(i -> matrix[i][column]).toArray();
+	BigInteger[] getColumn(BigInteger[][] matrix, int column) {
+		BigInteger[] col = new BigInteger[matrix.length];
+	   for(int i = 0; i < matrix.length; i++) {col[i] = matrix[i][column];}
+	   
+	   return col;
 	}
 	
 	
 	public static void main(String[] args) {
-		System.out.println(new factor().quadSieve(8713, 30));
+		System.out.println(new factor().quadSieve(BigInteger.valueOf(8764), BigInteger.valueOf(30)));
 	}
 	
 }
