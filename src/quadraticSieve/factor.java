@@ -7,8 +7,17 @@ import java.util.Arrays;
 public class factor 
 {
 
+<<<<<<< HEAD
 	public ArrayList<BigInteger> quadSieve(BigInteger n, BigInteger b)
 	{
+=======
+	public int[][] factor(int n, int b)
+	{
+		ArrayList<Integer> primes = new SieveOfAtkin().sieve(n+1);
+		ArrayList<Integer> factorBase = new ArrayList<Integer>();
+		
+		factorBase.add(-1);
+>>>>>>> parent of 315235e... 26 January 2019 I
 		
 		
 		
@@ -23,7 +32,7 @@ public class factor
 		
 		for(int i = 1; i < primes.size(); i++)
 		{
-			if(new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1) {factorBase.add(primes.get(i));}	
+			if(new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1 && primes.get(i) < b) {factorBase.add(primes.get(i));}	
 		}
 		
 		
@@ -75,15 +84,21 @@ public class factor
 			}
 		}
 		
+<<<<<<< HEAD
 		
 		
+=======
+>>>>>>> parent of 315235e... 26 January 2019 I
 		Matrix t = new Matrix(findNull);
 		t.transpose();
 		
+		//System.out.println(possible);
+		
 		t.rref();
 		
-		t.transpose();
+		return t.getArray();
 		
+<<<<<<< HEAD
 		findNull = t.getArray();
 		BigInteger[] values = null;
 		
@@ -136,6 +151,15 @@ public class factor
 	
 	public static void main(String[] args) {
 		System.out.println(new factor().quadSieve(BigInteger.valueOf(8764), BigInteger.valueOf(30)));
+=======
+		
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		System.out.println(Arrays.deepToString(new factor().factor(87463, 30)).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+>>>>>>> parent of 315235e... 26 January 2019 I
 	}
 	
 }
