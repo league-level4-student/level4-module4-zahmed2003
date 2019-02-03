@@ -1,165 +1,118 @@
 package quadraticSieve;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
-public class factor 
-{
+public class factor {
 
-<<<<<<< HEAD
-	public ArrayList<BigInteger> quadSieve(BigInteger n, BigInteger b)
-	{
-=======
-	public int[][] factor(int n, int b)
-	{
-		ArrayList<Integer> primes = new SieveOfAtkin().sieve(n+1);
+	public ArrayList<Integer> quadSieve(int n, int b) {
+
+		ArrayList<Integer> primes = new SieveOfAtkin().sieve(b + 1);
 		ArrayList<Integer> factorBase = new ArrayList<Integer>();
-		
-		factorBase.add(-1);
->>>>>>> parent of 315235e... 26 January 2019 I
-		
-		
-		
-		ArrayList<BigInteger> primes = new Sieve().sieve(b.add(BigInteger.ONE));
-		ArrayList<BigInteger> factorBase = new ArrayList<BigInteger>();
-		ArrayList<BigInteger> factors = new ArrayList<BigInteger>();
-		
-		
-		
-		while(n.mod(BigInteger.valueOf(2)).compareTo(BigInteger.ZERO) == 0) {n = n.divide(BigInteger.valueOf(2));}
-		
-		
-		for(int i = 1; i < primes.size(); i++)
-		{
-			if(new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1 && primes.get(i) < b) {factorBase.add(primes.get(i));}	
-		}
-		
-		
-		
-		BigInteger[][] A = new BigInteger[factorBase.size()][factorBase.size() - 1];
-		ArrayList<BigInteger> possible = new ArrayList<BigInteger>();
-		
-		BigInteger start = BigInteger.ONE;
-		BigInteger check = BigInteger.ZERO;
-		BigInteger count = BigInteger.ONE;
-		
-		
-		while(check.compareTo(BigInteger.valueOf(factorBase.size() - 1)) < 0)
-		{
-			BigInteger above = start.add(count);
-			
-			BigInteger[] aboveF = new GFG().mod2(above.multiply(above).subtract(n), factorBase);
-			
-			if(aboveF != null)
-			{
-				for(int i = 0; i < aboveF.length; i++)
-				{
-					A[i][check.intValueExact()] = aboveF[i];
-				}
-				possible.add(above);
-				check.add(BigInteger.ONE);
+		ArrayList<Integer> factors = new ArrayList<Integer>();
+		factorBase.add(2);
+
+		System.out.println("Finding factor base");
+
+		for (int i = 1; i < primes.size(); i++) {
+			if (new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1) {
+				factorBase.add(primes.get(i));
 			}
-			
-			count.add(BigInteger.ONE);
-			
 		}
-		
-		BigInteger[][] findNull = new BigInteger[A.length + A[0].length][A[0].length];
-		BigInteger[][] id = Matrix.identity(A[0].length);
-		
-		for(int i = 0; i < A.length; i++)
-		{
-			for(int j = 0; j < A[i].length; j++)
-			{
+
+		int[][] A = new int[factorBase.size()][factorBase.size() - 1];
+		ArrayList<Integer> possible = new ArrayList<Integer>();
+
+		int check = 0;
+		int count = (int) Math.floor(Math.sqrt(n));
+
+		System.out.println("Beginning sieve");
+
+		while (check < factorBase.size() - 1) {
+
+			int[] aboveF = new GFG().mod2(count * count - n, factorBase);
+
+			if (aboveF != null) {
+				for (int i = 0; i < aboveF.length; i++) {
+					A[i][check] = aboveF[i];
+				}
+				possible.add(count);
+				check++;
+			}
+
+			count++;
+
+		}
+
+		System.out.println("Beginning Matrix calculations");
+		System.out.println(possible);
+
+		int[][] findNull = new int[A.length + A[0].length][A[0].length];
+		int[][] id = Matrix.identity(A[0].length);
+
+		for (int i = 0; i < A.length; i++) {
+			for (int j = 0; j < A[i].length; j++) {
 				findNull[i][j] = A[i][j];
 			}
 		}
-		
-		for(int i = 0; i < id.length; i++)
-		{
-			for(int j = 0; j < id[i].length; j++)
-			{
+
+		for (int i = 0; i < id.length; i++) {
+			for (int j = 0; j < id[i].length; j++) {
 				findNull[i + A.length][j] = id[i][j];
 			}
 		}
-		
-<<<<<<< HEAD
-		
-		
-=======
->>>>>>> parent of 315235e... 26 January 2019 I
+
 		Matrix t = new Matrix(findNull);
 		t.transpose();
-		
-		//System.out.println(possible);
-		
+
 		t.rref();
-		
-		return t.getArray();
-		
-<<<<<<< HEAD
+
+		t.transpose();
+
 		findNull = t.getArray();
-		BigInteger[] values = null;
-		
-		for(int i = 0; i < findNull[0].length; i++)
-		{
-			BigInteger[] column = getColumn(findNull, i);
-			BigInteger[] subColumn = Arrays.copyOfRange(column, 0, findNull.length - possible.size());
+		int[] values = null;
+
+		for (int i = 0; i < findNull[0].length; i++) {
+			int[] column = getColumn(findNull, i);
+			int[] subColumn = Arrays.copyOfRange(column, 0, findNull.length - possible.size());
 
 			int numZeroes = 0;
-			
-			for(int j = 0; j < subColumn.length; j++)
-			{
-				if(subColumn[j].compareTo(BigInteger.ZERO) == 0) {numZeroes++;}
-			}
-			
-			if(numZeroes == subColumn.length)
-			{
-				
-				
-				values = Arrays.copyOfRange(column, findNull.length - possible.size(), findNull.length);
-				
-				ArrayList<BigInteger> temp = new ArrayList<BigInteger>();
-				for(int k = 0; k < values.length; k++)
-				{
-					if(values[k].compareTo(BigInteger.ONE) == 0) {temp.add(possible.get(k));}
+			for (int j = 0; j < subColumn.length; j++) {
+				if (subColumn[j] == 0) {
+					numZeroes++;
 				}
-				
-				factors.add(gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)).abs(), n));
-				factors.add(gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)).abs(), n));
-				factors.add(null);
-				
-				System.out.println(factors);
-				
 			}
-			
-			
+
+			if (numZeroes == subColumn.length) {
+				values = Arrays.copyOfRange(column, findNull.length - possible.size(), findNull.length);
+
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				for (int k = 0; k < values.length; k++) {
+					if (values[k] == 1) {
+						temp.add(possible.get(k));
+					}
+				}
+
+				factors = new ArrayList<Integer>();
+
+				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) + gcd.findB(temp, n), n)));
+				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) - gcd.findB(temp, n), n)));
+				factors.add(null);
+
+			}
+
 		}
-		
+
 		return factors;
-		
+
 	}
-	
-	BigInteger[] getColumn(BigInteger[][] matrix, int column) {
-		BigInteger[] col = new BigInteger[matrix.length];
-	   for(int i = 0; i < matrix.length; i++) {col[i] = matrix[i][column];}
-	   
-	   return col;
+
+	int[] getColumn(int[][] matrix, int column) {
+		return IntStream.range(0, matrix.length).map(i -> matrix[i][column]).toArray();
 	}
-	
-	
+
 	public static void main(String[] args) {
-		System.out.println(new factor().quadSieve(BigInteger.valueOf(8764), BigInteger.valueOf(30)));
-=======
-		
-		
+		System.out.println(new factor().quadSieve(3580, 30));
 	}
-	
-	
-	public static void main(String[] args) {
-		System.out.println(Arrays.deepToString(new factor().factor(87463, 30)).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
->>>>>>> parent of 315235e... 26 January 2019 I
-	}
-	
 }
