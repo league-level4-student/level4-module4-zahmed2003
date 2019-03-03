@@ -1,35 +1,39 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class gcd {
 
-	public static int gcd(int a, int b) {
-		if (a % b == 0) {
+	public static BigInteger gcd(BigInteger a, BigInteger b) {
+		if (a.mod(b).equals(BigInteger.ZERO)) {
 			return b;
 		} else {
-			return gcd(b, a % b);
+			return gcd(b, a.mod(b));
 		}
 	}
 
-	public static int findA(ArrayList<Integer> x, int n) {
-		int a = 1;
+	public static BigInteger findA(ArrayList<BigInteger> temp, BigInteger n) {
+		BigInteger a = BigInteger.ONE;
 
-		for (Integer i : x) {
-			a = a * (i % n);
+		for (BigInteger i : temp) {
+			a = a.multiply(i);
 		}
 
-		return a % n;
+		return a.mod(n);
 	}
 
-	public static int findB(ArrayList<Integer> x, int n) {
-		double b = 1;
+	public static BigInteger findB(ArrayList<BigInteger> x, BigInteger n) {
+		BigInteger b = BigInteger.ONE;
 
-		for (Integer i : x) {
-			b = b * (Math.sqrt(Math.abs(Math.pow(i, 2) - n)) % n);
+		for (BigInteger i : x) {
+			b = b.multiply((i.pow(2).subtract(n)));
 		}
+		
+		b = BigSqrt.sqrt(b);
+		
 
-		return (int) b % n;
+		return b.mod(n);
 	}
 
 }

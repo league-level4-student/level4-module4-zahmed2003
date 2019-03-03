@@ -1,10 +1,11 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 class GFG {
 
-	public int[] mod2(int n, ArrayList<Integer> base) {
+	public int[] mod2(BigInteger bigInteger, ArrayList<Integer> base) {
 		int[] factors = new int[base.size()];
 
 		for (int i = 0; i < factors.length; i++) {
@@ -12,13 +13,13 @@ class GFG {
 		}
 
 		for (int i = 0; i < base.size(); i++) {
-			while (n % base.get(i) == 0) {
+			while (bigInteger.mod(BigInteger.valueOf(base.get(i))).equals(BigInteger.ZERO)) {
 				factors[i] += 1;
-				n = n / base.get(i);
+				bigInteger = bigInteger.divide(BigInteger.valueOf(base.get(i)));
 			}
 		}
 
-		if (n != 1 && n != -1) {
+		if (bigInteger.equals(BigInteger.ONE) == false) {
 			return null;
 		} else {
 			for (int i = 0; i < factors.length; i++) {

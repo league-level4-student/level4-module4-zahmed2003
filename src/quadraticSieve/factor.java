@@ -1,17 +1,24 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class factor {
 
-	public ArrayList<Integer> quadSieve(int n, int b) {
+	public ArrayList<BigInteger> quadSieve(BigInteger n, int b) {
 
 		ArrayList<Integer> primes = new SieveOfAtkin().sieve(b + 1);
 		ArrayList<Integer> factorBase = new ArrayList<Integer>();
-		ArrayList<Integer> factors = new ArrayList<Integer>();
+		ArrayList<BigInteger> factors = new ArrayList<BigInteger>();
 		factorBase.add(2);
+		
+		while(n.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO))
+		{
+			n = n.divide(BigInteger.valueOf(2));
+			factors.add(BigInteger.valueOf(2));
+		}
 
 		System.out.println("Finding factor base");
 
@@ -22,16 +29,18 @@ public class factor {
 		}
 
 		int[][] A = new int[factorBase.size()][factorBase.size() - 1];
-		ArrayList<Integer> possible = new ArrayList<Integer>();
+		ArrayList<BigInteger> possible = new ArrayList<BigInteger>();
 
 		int check = 0;
-		int count = (int) Math.floor(Math.sqrt(n));
+		BigInteger count = BigSqrt.sqrt(n);
+		
+		//System.out.println(factorBase);
 
 		System.out.println("Beginning sieve");
 
 		while (check < factorBase.size() - 1) {
 
-			int[] aboveF = new GFG().mod2(count * count - n, factorBase);
+			int[] aboveF = new GFG().mod2(count.multiply(count).subtract(n), factorBase);
 
 			if (aboveF != null) {
 				for (int i = 0; i < aboveF.length; i++) {
@@ -41,12 +50,12 @@ public class factor {
 				check++;
 			}
 
-			count++;
+			count = count.add(BigInteger.ONE);
 
 		}
-
+		
+	//	System.out.println(possible);
 		System.out.println("Beginning Matrix calculations");
-		System.out.println(possible);
 
 		int[][] findNull = new int[A.length + A[0].length][A[0].length];
 		int[][] id = Matrix.identity(A[0].length);
@@ -87,32 +96,43 @@ public class factor {
 			if (numZeroes == subColumn.length) {
 				values = Arrays.copyOfRange(column, findNull.length - possible.size(), findNull.length);
 
-				ArrayList<Integer> temp = new ArrayList<Integer>();
+				ArrayList<BigInteger> temp = new ArrayList<BigInteger>();
 				for (int k = 0; k < values.length; k++) {
 					if (values[k] == 1) {
 						temp.add(possible.get(k));
 					}
 				}
-
-				factors = new ArrayList<Integer>();
-
-				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) + gcd.findB(temp, n), n)));
-				factors.add(Math.abs(gcd.gcd(gcd.findA(temp, n) - gcd.findB(temp, n), n)));
-				factors.add(null);
+				
+				factors.add(gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)), n).abs());
+				factors.add(gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)), n).abs());
+				
+				return factors;
 
 			}
 
 		}
 
-		return factors;
+		return null;
 
 	}
 
 	int[] getColumn(int[][] matrix, int column) {
 		return IntStream.range(0, matrix.length).map(i -> matrix[i][column]).toArray();
 	}
+	
+	public ArrayList<BigInteger> recurs(ArrayList<BigInteger> quad, int b)
+	{
+		ArrayList<BigInteger> temp = quad;
+		
+		for(BigInteger i: temp)
+		{
+			Iterator.
+			temp.remove(i);
+			temp.addA
+		}
+	}
 
 	public static void main(String[] args) {
-		System.out.println(new factor().quadSieve(3580, 30));
+		System.out.println(new factor().quadSieve(BigInteger.valueOf(1234567212).multiply(BigInteger.valueOf(1264567292)).multiply(BigInteger.valueOf(1397391926)), 10000));
 	}
 }

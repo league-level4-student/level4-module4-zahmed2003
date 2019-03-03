@@ -1,15 +1,17 @@
 package quadraticSieve;
 
+import java.math.BigInteger;
+
 public class legendreSymbol {
 
-	public int legendreSymbol(int a, int p) {
+	public int legendreSymbol(BigInteger n, int p) {
 
-		if (a % p == 0) {
+		if (n.mod(BigInteger.valueOf(p)).equals(BigInteger.ZERO)) {
 			return 0;
 		}
 
 		for (int x = 1; x < p; x++) {
-			if ((x * x - a) % p == 0) {
+			if ((BigInteger.valueOf(x * x).subtract(n)).mod(BigInteger.valueOf(p)).equals(BigInteger.ZERO)) {
 				return 1;
 			}
 		}

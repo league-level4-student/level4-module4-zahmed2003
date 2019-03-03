@@ -31,8 +31,8 @@ public class Matrix {
 		int j = 0;
 		boolean check = false;
 
-		System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-		System.out.println("");
+	//	System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+	//	System.out.println("");
 
 		while (i < m.length && j < m[i].length) {
 			while (m[i][j] == 0) {
@@ -62,8 +62,8 @@ public class Matrix {
 				}
 			}
 
-			System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-			System.out.println("");
+		//	System.out.println(Arrays.deepToString(m).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+		//	System.out.println("");
 
 			i++;
 			j++;
