@@ -7,7 +7,10 @@ import java.util.stream.IntStream;
 
 public class factor {
 
-	public ArrayList<BigInteger> quadSieve(BigInteger n, int b) {
+	public ArrayList<BigInteger> quadSieve(BigInteger n, int b, int numAddToMatrix) {
+		
+		ArrayList<BigInteger> one = new ArrayList<BigInteger>();
+		one.add(BigInteger.ONE);
 
 		ArrayList<Integer> primes = new SieveOfAtkin().sieve(b + 1);
 		ArrayList<Integer> factorBase = new ArrayList<Integer>();
@@ -28,7 +31,7 @@ public class factor {
 			}
 		}
 
-		int[][] A = new int[factorBase.size()][factorBase.size() - 1];
+		int[][] A = new int[factorBase.size()][factorBase.size() + numAddToMatrix];
 		ArrayList<BigInteger> possible = new ArrayList<BigInteger>();
 
 		int check = 0;
@@ -38,8 +41,14 @@ public class factor {
 
 		System.out.println("Beginning sieve");
 
-		while (check < factorBase.size() - 1) {
-
+		while (check < factorBase.size() + numAddToMatrix) {
+			
+			if(count.multiply(count).subtract(n).compareTo(BigInteger.ZERO) == 0)
+			{
+				factors.add(count);
+				factors.add(count);
+				return factors;
+			}
 			int[] aboveF = new GFG().mod2(count.multiply(count).subtract(n), factorBase);
 
 			if (aboveF != null) {
@@ -103,8 +112,11 @@ public class factor {
 					}
 				}
 				
-				factors.add(gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)), n).abs());
-				factors.add(gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)), n).abs());
+				BigInteger f1 = gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)), n).abs();
+				BigInteger f2 = gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)), n).abs();
+				
+				factors.add(f1);
+				factors.add(f2);
 				
 				return factors;
 
@@ -119,20 +131,11 @@ public class factor {
 	int[] getColumn(int[][] matrix, int column) {
 		return IntStream.range(0, matrix.length).map(i -> matrix[i][column]).toArray();
 	}
-	
-	public ArrayList<BigInteger> recurs(ArrayList<BigInteger> quad, int b)
-	{
-		ArrayList<BigInteger> temp = quad;
-		
-		for(BigInteger i: temp)
-		{
-			Iterator.
-			temp.remove(i);
-			temp.addA
-		}
-	}
 
 	public static void main(String[] args) {
-		System.out.println(new factor().quadSieve(BigInteger.valueOf(1234567212).multiply(BigInteger.valueOf(1264567292)).multiply(BigInteger.valueOf(1397391926)), 10000));
+		long startTime = System.nanoTime();
+			System.out.println(new factor().quadSieve(new BigInteger("123456789123456789123456789123456789123456789"), 10000, -1));
+		long endTime = System.nanoTime();
+			System.out.println("Time taken: " + ((double) endTime - startTime)/1000000000 + " seconds");
 	}
 }
