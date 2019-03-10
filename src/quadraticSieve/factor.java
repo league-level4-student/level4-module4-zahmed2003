@@ -35,6 +35,7 @@ public class factor {
 		ArrayList<BigInteger> possible = new ArrayList<BigInteger>();
 
 		int check = 0;
+		BigInteger countCheck = BigInteger.ZERO;
 		BigInteger count = BigSqrt.sqrt(n);
 		
 		//System.out.println(factorBase);
@@ -42,7 +43,7 @@ public class factor {
 		System.out.println("Beginning sieve");
 
 		while (check < factorBase.size() + numAddToMatrix) {
-			
+			if(countCheck.mod(new BigInteger("10000")).compareTo(BigInteger.ZERO) == 0) {System.out.println(countCheck + " values checked and " + check + "/" + (factorBase.size() + numAddToMatrix) + " (~" + (check/(factorBase.size() + numAddToMatrix)*100) + "%) values found");}
 			if(count.multiply(count).subtract(n).compareTo(BigInteger.ZERO) == 0)
 			{
 				factors.add(count);
@@ -60,11 +61,12 @@ public class factor {
 			}
 
 			count = count.add(BigInteger.ONE);
+			countCheck = countCheck.add(BigInteger.ONE);
 
 		}
 		
 	//	System.out.println(possible);
-		System.out.println("Beginning Matrix calculations");
+		System.out.println("Establishing Linear Dependencies");
 
 		int[][] findNull = new int[A.length + A[0].length][A[0].length];
 		int[][] id = Matrix.identity(A[0].length);
@@ -134,7 +136,7 @@ public class factor {
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
-			System.out.println(new factor().quadSieve(new BigInteger("123456789123456789123456789123456789123456789"), 10000, -1));
+			System.out.println(new factor().quadSieve(new BigInteger("123456789012345678901234567890"), 10000, -1));
 		long endTime = System.nanoTime();
 			System.out.println("Time taken: " + ((double) endTime - startTime)/1000000000 + " seconds");
 	}
