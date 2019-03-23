@@ -3,12 +3,13 @@ package quadraticSieve;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class factor {
 
-	public ArrayList<BigInteger> quadSieve(BigInteger n, int b, int numAddToMatrix) {
-		
+	public List<BigInteger> quadSieve(BigInteger n, int b, int numAddToMatrix) {
+
 		ArrayList<BigInteger> one = new ArrayList<BigInteger>();
 		one.add(BigInteger.ONE);
 
@@ -16,9 +17,8 @@ public class factor {
 		ArrayList<Integer> factorBase = new ArrayList<Integer>();
 		ArrayList<BigInteger> factors = new ArrayList<BigInteger>();
 		factorBase.add(2);
-		
-		while(n.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO))
-		{
+
+		while (n.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO)) {
 			n = n.divide(BigInteger.valueOf(2));
 			factors.add(BigInteger.valueOf(2));
 		}
@@ -37,35 +37,15 @@ public class factor {
 		int check = 0;
 		BigInteger countCheck = BigInteger.ZERO;
 		BigInteger count = BigSqrt.sqrt(n);
-		
-		//System.out.println(factorBase);
+
+		// System.out.println(factorBase);
 
 		System.out.println("Beginning sieve");
-
-		while (check < factorBase.size() + numAddToMatrix) {
-			if(countCheck.mod(new BigInteger("10000")).compareTo(BigInteger.ZERO) == 0) {System.out.println(countCheck + " values checked and " + check + "/" + (factorBase.size() + numAddToMatrix) + " (~" + (check/(factorBase.size() + numAddToMatrix)*100) + "%) values found");}
-			if(count.multiply(count).subtract(n).compareTo(BigInteger.ZERO) == 0)
-			{
-				factors.add(count);
-				factors.add(count);
-				return factors;
-			}
-			int[] aboveF = new GFG().mod2(count.multiply(count).subtract(n), factorBase);
-
-			if (aboveF != null) {
-				for (int i = 0; i < aboveF.length; i++) {
-					A[i][check] = aboveF[i];
-				}
-				possible.add(count);
-				check++;
-			}
-
-			count = count.add(BigInteger.ONE);
-			countCheck = countCheck.add(BigInteger.ONE);
-
+		List<BigInteger> perfectSquare = sieve(check, numAddToMatrix, countCheck, factors, count, factorBase, possible, n, A);
+		if(perfectSquare!= null) {
+			return perfectSquare;
 		}
-		
-	//	System.out.println(possible);
+		// System.out.println(possible);
 		System.out.println("Establishing Linear Dependencies");
 
 		int[][] findNull = new int[A.length + A[0].length][A[0].length];
@@ -113,13 +93,13 @@ public class factor {
 						temp.add(possible.get(k));
 					}
 				}
-				
+
 				BigInteger f1 = gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)), n).abs();
 				BigInteger f2 = gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)), n).abs();
-				
+
 				factors.add(f1);
 				factors.add(f2);
-				
+
 				return factors;
 
 			}
@@ -136,8 +116,43 @@ public class factor {
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
-			System.out.println(new factor().quadSieve(new BigInteger("123456789012345678901234567890"), 10000, -1));
+		System.out.println(new factor().quadSieve(new BigInteger("12345678901234567890"), 10000, -1));
 		long endTime = System.nanoTime();
-			System.out.println("Time taken: " + ((double) endTime - startTime)/1000000000 + " seconds");
+		System.out.println("Time taken: " + ((double) endTime - startTime) / 1000000000 + " seconds");
 	}
+//			if (countCheck.mod(new BigInteger("10000")).compareTo(BigInteger.ZERO) == 0) {
+//				System.out.println(countCheck + " values checked and " + check + "/"
+//						+ (factorBase.size() + numAddToMatrix) + " values found");
+//			}
+
+	public List<BigInteger> sieve(int check, int numAddToMatrix, BigInteger countCheck, List<BigInteger> factors,
+			BigInteger count, ArrayList<Integer> factorBase, ArrayList<BigInteger> possible, BigInteger n, int[][] A) {
+		while (check < factorBase.size() + numAddToMatrix) {
+			if (isPerfectSquare(n, count)) {
+				factors.add(count);
+				factors.add(count);
+				return factors;
+			}
+			int[] aboveF = new GFG().mod2(count.multiply(count).subtract(n), factorBase);
+		
+			if (aboveF != null) {
+				
+				for (int i = 0; i < aboveF.length; i++) {
+					A[i][check] = aboveF[i];
+				}
+				possible.add(count);
+				check++;
+			}
+
+			count = count.add(BigInteger.ONE);
+			countCheck = countCheck.add(BigInteger.ONE);
+
+		}
+		return null;
+	}
+	
+	boolean isPerfectSquare(BigInteger n, BigInteger count) {
+		return count.multiply(count).subtract(n).compareTo(BigInteger.ZERO) == 0;
+	}
+
 }
