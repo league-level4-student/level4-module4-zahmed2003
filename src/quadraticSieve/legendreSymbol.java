@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 public class legendreSymbol {
 
-	public int legendreSymbol(BigInteger n, int p) {
+	public static int legendreSymbol(BigInteger n, int p) {
 
 		if (n.mod(BigInteger.valueOf(p)).equals(BigInteger.ZERO)) {
 			return 0;

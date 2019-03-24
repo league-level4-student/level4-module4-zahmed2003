@@ -5,12 +5,8 @@ import java.util.ArrayList;
 
 class GFG {
 
-	public int[] mod2(BigInteger bigInteger, ArrayList<Integer> base) {
+	public static int[] mod2(BigInteger bigInteger, ArrayList<Integer> base) {
 		int[] factors = new int[base.size()];
-
-		for (int i = 0; i < factors.length; i++) {
-			factors[i] = 0;
-		}
 
 		for (int i = 0; i < base.size(); i++) {
 			while (bigInteger.mod(BigInteger.valueOf(base.get(i))).equals(BigInteger.ZERO)) {

@@ -26,7 +26,7 @@ public class factor {
 		System.out.println("Finding factor base");
 
 		for (int i = 1; i < primes.size(); i++) {
-			if (new legendreSymbol().legendreSymbol(n, primes.get(i)) == 1) {
+			if (legendreSymbol.legendreSymbol(n, primes.get(i)) == 1) {
 				factorBase.add(primes.get(i));
 			}
 		}
@@ -133,7 +133,7 @@ public class factor {
 				factors.add(count);
 				return factors;
 			}
-			int[] aboveF = new GFG().mod2(count.multiply(count).subtract(n), factorBase);
+			int[] aboveF = GFG.mod2(count.multiply(count).subtract(n), factorBase);
 		
 			if (aboveF != null) {
 				
