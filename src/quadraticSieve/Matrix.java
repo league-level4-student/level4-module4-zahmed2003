@@ -73,17 +73,7 @@ public class Matrix {
 
 	public static int[][] identity(int n) {
 		int[][] id = new int[n][n];
-
-		for (int i = 0; i < id.length; i++) {
-			for (int j = 0; j < id[i].length; j++) {
-				if (i == j) {
-					id[i][j] = 1;
-				} else {
-					id[i][j] = 0;
-				}
-			}
-		}
-
+		for (int i = 0; i < id.length; i++) {id[i][i] = 1;}
 		return id;
 	}
 

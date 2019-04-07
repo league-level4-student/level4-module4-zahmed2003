@@ -14,13 +14,21 @@ public class factor {
 		one.add(BigInteger.ONE);
 
 		ArrayList<Integer> primes = new SieveOfAtkin().sieve(b + 1);
-		ArrayList<Integer> factorBase = new ArrayList<Integer>();
 		ArrayList<BigInteger> factors = new ArrayList<BigInteger>();
+		
+		ArrayList<Integer> factorBase = new ArrayList<Integer>();
 		factorBase.add(2);
 
 		while (n.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO)) {
 			n = n.divide(BigInteger.valueOf(2));
 			factors.add(BigInteger.valueOf(2));
+		}
+		
+		if (isPerfectSquare(n)) {
+			BigInteger sqrt = BigSqrt.sqrt(n);
+			factors.add(sqrt);
+			factors.add(sqrt);
+			return factors;
 		}
 
 		System.out.println("Finding factor base");
@@ -35,16 +43,14 @@ public class factor {
 		ArrayList<BigInteger> possible = new ArrayList<BigInteger>();
 
 		int check = 0;
-		BigInteger countCheck = BigInteger.ZERO;
 		BigInteger count = BigSqrt.sqrt(n);
 
 		// System.out.println(factorBase);
 
 		System.out.println("Beginning sieve");
-		List<BigInteger> perfectSquare = sieve(check, numAddToMatrix, countCheck, factors, count, factorBase, possible, n, A);
-		if(perfectSquare!= null) {
-			return perfectSquare;
-		}
+		
+		sieve(check, numAddToMatrix, factors, count, factorBase, possible, n, A);
+		
 		// System.out.println(possible);
 		System.out.println("Establishing Linear Dependencies");
 
@@ -93,12 +99,12 @@ public class factor {
 						temp.add(possible.get(k));
 					}
 				}
+				
+				BigInteger f1 = gcd.findA(temp, n);
+				BigInteger f2 = gcd.findB(temp, n);
 
-				BigInteger f1 = gcd.gcd(gcd.findA(temp, n).add(gcd.findB(temp, n)), n).abs();
-				BigInteger f2 = gcd.gcd(gcd.findA(temp, n).subtract(gcd.findB(temp, n)), n).abs();
-
-				factors.add(f1);
-				factors.add(f2);
+				factors.add(gcd.gcd(f1.add(f2), n).abs());
+				factors.add(gcd.gcd(f1.subtract(f2), n).abs());
 
 				return factors;
 
@@ -115,44 +121,34 @@ public class factor {
 	}
 
 	public static void main(String[] args) {
+		
 		long startTime = System.nanoTime();
 		System.out.println(new factor().quadSieve(new BigInteger("12345678901234567890"), 10000, -1));
 		long endTime = System.nanoTime();
 		System.out.println("Time taken: " + ((double) endTime - startTime) / 1000000000 + " seconds");
 	}
-//			if (countCheck.mod(new BigInteger("10000")).compareTo(BigInteger.ZERO) == 0) {
-//				System.out.println(countCheck + " values checked and " + check + "/"
-//						+ (factorBase.size() + numAddToMatrix) + " values found");
-//			}
 
-	public List<BigInteger> sieve(int check, int numAddToMatrix, BigInteger countCheck, List<BigInteger> factors,
+	public void sieve(int check, int numAddToMatrix, List<BigInteger> factors,
 			BigInteger count, ArrayList<Integer> factorBase, ArrayList<BigInteger> possible, BigInteger n, int[][] A) {
 		while (check < factorBase.size() + numAddToMatrix) {
-			if (isPerfectSquare(n, count)) {
-				factors.add(count);
-				factors.add(count);
-				return factors;
-			}
-			int[] aboveF = GFG.mod2(count.multiply(count).subtract(n), factorBase);
+			Object[] aboveF = GFG.mod2(count.multiply(count).subtract(n), factorBase);
 		
 			if (aboveF != null) {
 				
 				for (int i = 0; i < aboveF.length; i++) {
-					A[i][check] = aboveF[i];
+					A[i][check] = (int) aboveF[i];
 				}
 				possible.add(count);
 				check++;
 			}
 
 			count = count.add(BigInteger.ONE);
-			countCheck = countCheck.add(BigInteger.ONE);
 
 		}
-		return null;
 	}
 	
-	boolean isPerfectSquare(BigInteger n, BigInteger count) {
-		return count.multiply(count).subtract(n).compareTo(BigInteger.ZERO) == 0;
+	boolean isPerfectSquare(BigInteger n) {
+		return BigSqrt.sqrt(n).pow(2).compareTo(n) == 0;
 	}
 
 }
